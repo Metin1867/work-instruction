@@ -1,5 +1,18 @@
-anweisungen=[("Anweisung1", ("Anweisung1","butterfly_transparent.png")),
-             ("Anweisung2", ("Anweisung2","soccerball_transparent.png")),
-             (3, ("Anweisung3","fish_transparent.png")),
-             (4, ("Anweisung4","flower_transparent.png")),
-             (5, ("Anweisung5","basketball_transparent.png"))]
+anweisungen=[#("AnweisungID", (ArbeitsAnweisung,BackgroundImagePath,ShortDescription,Erstellt,LetzteAenderung,
+             #       (SchrittNummer,ShortDescription,ReferenceLink,
+             #               (NotizNummer,NotizText)))
+             ("Anweisung1", ("Anweisung1","butterfly_transparent.png","Eine erste Anweisung","2023-05-12 10:30:34",None,
+                             (1,"eine erste Schritt der ersten Anweisung",None,
+                             (1,"DIE ANWEISUNG 1")))),
+             ("Anweisung2", ("Anweisung2","soccerball_transparent.png","Eine zweite Anweisung","2023-06-30 08:12:43",None,
+                             (1,"eine erste Schritt der uweiten Anweisung",None,
+                             (1,"DIE ANWEISUNG 2")))),
+             (3, ("Anweisung3","fish_transparent.png","Eine dritte Anweisung","2023-07-21 14:47:44",None,
+                             (1,"eine erste Schritt der dritten Anweisung",None,
+                             (1,"DIE ANWEISUNG 3")))),
+             (4, ("Anweisung4","flower_transparent.png","Eine vierte Anweisung","2023-09-27 13:23:55",None,
+                             (1,"eine erste Schritt der vierten Anweisung",None,
+                             (1,"DIE ANWEISUNG 4")))),
+             (5, ("Anweisung5","basketball_transparent.png","Eine erste Anweisung","2024-02-04 16:22:25",None,
+                             (1,"eine erste Schritt der fünften Anweisung",None,
+                             (1,"DIE ANWEISUNG 5"))))]

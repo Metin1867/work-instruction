@@ -3,26 +3,9 @@ import tkinter as tk
 from tkinter import PhotoImage
 from tkinter import ttk
 from PIL import Image, ImageTk
-import pyglet
-# pip install pyglet
 
+from constants import BG_COLOR, HEADINGFONT, MENUFONT, COLUMN_PER_ROW
 import ArbeitsAnweisungen as data
-
-BG_COLOR = "#3d6466"
-HEADINGFONT = "TkHeadingFont"
-try:
-    pyglet.font.add_file("./TkinterRecipes/fonts/Ubuntu-Bold.ttf")      # replace Heading Font
-    HEADINGFONT = "Ubuntu"
-except:
-    pass
-MENUFONT = "TkMenuFont"
-try:
-    pyglet.font.add_file("./TkinterRecipes/fonts/Shanti-Regular.ttf")   # replace Menu Font
-    MENUFONT = "Shanti"
-except:
-    pass
-
-COLUMN_PER_ROW = 4
 
 button_img = {}
 
@@ -37,19 +20,8 @@ def clear_widgets(current_frame):
                 widget.destroy()
 
 def get_image(name, base_width=150):
-    """
-    base_width= 300
-img = Image.open('somepic.jpg')
-wpercent = (base_width / float(img.size[0]))
-hsize = int((float(img.size[1]) * float(wpercent)))
-img = img.resize((basewidth, hsize), Image.Resampling.LANCZOS)
-img.save('somepic.jpg')
-"""
-    #image = Image.open("./assets/"+name).resize((100,200))
-    #return ImageTk.PhotoImage(image)
     image=Image.open("./assets/"+name)
     # Resize the image in the given (width, height)
-    #img=image.resize((150, 150))
     wpercent = (base_width / float(image.size[0]))
     hsize = int((float(image.size[1]) * float(wpercent)))
     image = image.resize((base_width, hsize), Image.Resampling.LANCZOS)
@@ -89,17 +61,14 @@ def load_main_frame():
     for anweisung in data.anweisungen:
         print(anweisung, anweisung[0], anweisung[1][0],anweisung[1][1])
         print("Row/Column:", row, "/", col)
-        button_img[anweisung[0]]=get_image(anweisung[1][1])           # PhotoImage(file="./assets/"+anweisung[1][1])
-        #button= tk.Button(frame, image=button_img[anweisung[0]],borderwidth=0)
-        #button.pack(pady=30)
+        button_img[anweisung[0]]=get_image(anweisung[1][1])
         button = tk.Button(buttonframe, text=anweisung[1][0], image=button_img[anweisung[0]], font=(HEADINGFONT, 20),
             bg="#28393a", fg='white', 
             cursor="hand2", 
             activebackground="#badee2", activeforeground="black",
-            #command=lambda:load_detail_frame(anweisung[0])
             command=partial(load_detail_frame, anweisung[0]),
             width=150, height=150
-            ) #.pack(pady=20)
+            )
         button.grid(row=row, column=col, padx=5, pady=5)
         button.grid_rowconfigure(col, weight=1)
         count += 1
@@ -107,19 +76,6 @@ def load_main_frame():
         if count%COLUMN_PER_ROW == 0:
             row += 1
             col = 0
-        """
-        tk.Button(frame, text=anweisung[1][0], image=btn_image, font=(HEADINGFONT, 20),
-            bg="#28393a", fg='white', cursor="hand2", 
-            activebackground="#badee2", activeforeground="black",
-            #command=lambda:load_detail_frame(anweisung[0])
-            command=partial(load_detail_frame, anweisung[0])
-            ).pack(pady=20)
-
-        ttk.Button(frame, text=anweisung[1][0], image=get_image(anweisung[1][1]),
-            cursor="hand2", 
-            #command=lambda:load_detail_frame(anweisung[0])
-            command=partial(load_detail_frame, anweisung[0])
-            ).pack(pady=20)"""
 
     tk.Button(frame, text="EXIT", font=(HEADINGFONT, 20), 
             bg="#28393a", fg='white', cursor="hand2", 
@@ -150,11 +106,7 @@ def load_config_detail_frame():
 root = tk.Tk()
 root.title("Arbeits Anweisungen")
 root.geometry("1024x768")
-#root.minsize(width=250, height=250)
-#root.maxsize(width=1000, height=800)
 root.resizable(width=False, height=False)
-#root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(root.winfo_id()))
-#root.eval("tk::PlaceWindow . center")
 
 frames=[]
 main_frame = tk.Frame(root, width=1024, height=768, bg=BG_COLOR)
@@ -172,17 +124,8 @@ for frame in frames:
     frame.grid(row=0, column=0, sticky="news")
 
 load_main_frame()
-"""
-root.withdraw()
-root.update_idletasks()  # Update "requested size" from geometry manager
-print("Screen WxH+w+h:",root.winfo_screenwidth(),"x",root.winfo_screenheight(),"+",root.winfo_reqwidth(),"+",root.winfo_reqheight())
-x = (root.winfo_screenwidth() - root.winfo_reqwidth()) / 2
-y = (root.winfo_screenheight() - root.winfo_reqheight()) / 2
-root.geometry("+%d+%d" % (x, y))
-root.deiconify()
-"""
 root.eval("tk::PlaceWindow . center")
 print("Screen WxH+w+h:",root.winfo_screenwidth(),"x",root.winfo_screenheight(),"+",root.winfo_reqwidth(),"+",root.winfo_reqheight())
 
-# Pun app
+# Run app
 root.mainloop()
