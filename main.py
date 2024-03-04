@@ -5,6 +5,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 
 from constants import BG_COLOR, HEADINGFONT, MENUFONT, COLUMN_PER_ROW
+from utils import flatten_list
 import ArbeitsAnweisungen as data
 
 button_img = {}
@@ -85,7 +86,20 @@ def load_main_frame():
 def load_detail_frame(id):
     frame=init_frame(detail_frame)
 
-    tk.Label(frame, text="Details for "+str(id),
+    anweisung=None
+    for item in data.anweisungen:
+        if item[0]==id:
+            anweisung=item[1]
+
+    datatext = ""
+    for info in (flatten_list(anweisung)):
+        if info==None:
+            datatext += "\n"
+        else:
+            datatext += str(info) + "\n"
+
+    print(datatext)
+    tk.Label(frame, text=datatext,
                 bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).pack()
 
     tk.Button(frame, text="BACK", font=(HEADINGFONT, 20), 

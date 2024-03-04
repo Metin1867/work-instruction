@@ -5,7 +5,7 @@ anweisungen=[#("AnweisungID", (ArbeitsAnweisung,BackgroundImagePath,ShortDescrip
                              (1,"eine erste Schritt der ersten Anweisung",None,
                              (1,"DIE ANWEISUNG 1")))),
              ("Anweisung2", ("Anweisung2","soccerball_transparent.png","Eine zweite Anweisung","2023-06-30 08:12:43",None,
-                             (1,"eine erste Schritt der uweiten Anweisung",None,
+                             (1,"eine erste Schritt der zweiten Anweisung",None,
                              (1,"DIE ANWEISUNG 2")))),
              (3, ("Anweisung3","fish_transparent.png","Eine dritte Anweisung","2023-07-21 14:47:44",None,
                              (1,"eine erste Schritt der dritten Anweisung",None,
