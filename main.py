@@ -2,13 +2,15 @@ from functools import partial
 import tkinter as tk
 from tkinter import PhotoImage
 from tkinter import ttk
+import tkinter.scrolledtext as scrolledtext
 from PIL import Image, ImageTk
 
 from constants import BG_COLOR, HEADINGFONT, MENUFONT, COLUMN_PER_ROW
-from utils import flatten_list
+from utils import log, flatten_list, list_to_string
 import ArbeitsAnweisungen as data
 
 button_img = {}
+imgages = {}
 
 def exit():
     root.destroy()
@@ -38,7 +40,7 @@ def append_logo(frame):
         logo_widget.image = logo_image
         logo_widget.pack()
     except:
-        print("WARNING:", "Logo doesn't exists!")
+        log("WARNING:", "Logo doesn't exists!")
 
 def init_frame(frame, logo=None):
     clear_widgets(frame)
@@ -53,15 +55,15 @@ def init_frame(frame, logo=None):
 def load_main_frame():
     frame=init_frame(main_frame, "Logo")
         
-    tk.Label(frame, text="Ready for development",
+    tk.Label(frame, text="Eine Anweisung auswählen ...",
                 bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).pack()
 
     buttonframe = tk.Frame(frame, background=BG_COLOR)
     buttonframe.pack()
     count=row=col=0
     for anweisung in data.anweisungen:
-        print(anweisung, anweisung[0], anweisung[1][0],anweisung[1][1])
-        print("Row/Column:", row, "/", col)
+        log(anweisung, anweisung[0], anweisung[1][0],anweisung[1][1])
+        log("Row/Column:", row, "/", col)
         button_img[anweisung[0]]=get_image(anweisung[1][1])
         button = tk.Button(buttonframe, text=anweisung[1][0], image=button_img[anweisung[0]], font=(HEADINGFONT, 20),
             bg="#28393a", fg='white', 
@@ -86,21 +88,56 @@ def load_main_frame():
 def load_detail_frame(id):
     frame=init_frame(detail_frame)
 
-    anweisung=None
-    for item in data.anweisungen:
-        if item[0]==id:
-            anweisung=item[1]
+    anweisung=data.get_anweisung(id)
 
-    datatext = ""
-    for info in (flatten_list(anweisung)):
-        if info==None:
-            datatext += "\n"
+    datavalue = list_to_string(flatten_list(anweisung))
+    
+    dataframe = tk.Frame(frame)
+    datascrollabletext = scrolledtext.ScrolledText(dataframe, state=tk.DISABLED,
+                    bg=BG_COLOR, fg='white', font=(MENUFONT, 14))
+    datascrollabletext.config(height=10)
+    datascrollabletext.config(state=tk.NORMAL)
+    datascrollabletext.insert(tk.END, datavalue)
+    datascrollabletext.config(state=tk.DISABLED)
+    datascrollabletext.pack(expand=True, fill='both')
+    dataframe.pack(padx=5, pady=10)
+
+    anweisungsframe=tk.Frame(frame, bg=BG_COLOR)
+    anweisungsframe.pack()
+    indx=2
+    for el in ("Kurzbeschreibung", "Erstellung", "Letzte Änderung"):
+        log(el, ".grid(row={}, column={})".format(indx-2, 0))
+        label = tk.Label(anweisungsframe, text=el,
+                bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=0, sticky=tk.E)
+        log(anweisung[indx], ".grid(row={}, column={})".format(indx-2, 1))
+        label = tk.Label(anweisungsframe, text=anweisung[indx],
+                bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=1, sticky=tk.W)
+        indx +=1
+    schritte = anweisung[indx:]
+    for s in schritte:
+        print("Schritt:", s)
+        label = tk.Label(anweisungsframe, text="Schritt "+str(s[0]),
+                bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=0, sticky=tk.E)
+        label = tk.Label(anweisungsframe, text=s[1],
+                bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=1, sticky=tk.W)
+        indx +=1
+        if s[2] == None:
+            notizen = s[3:]
+            print("Notizen:", notizen)
+            for n in notizen:
+                print("Notiz:", n)
+                label = tk.Label(anweisungsframe, text="Notiz "+str(n[0]),
+                        bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=0, sticky=tk.E)
+                label = tk.Label(anweisungsframe, text=n[1],
+                        bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=1, sticky=tk.W)
         else:
-            datatext += str(info) + "\n"
-
-    print(datatext)
-    tk.Label(frame, text=datatext,
-                bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).pack()
+                print("Image:", s[2])
+                label = tk.Label(anweisungsframe, text="Image", 
+                        bg=BG_COLOR, fg='white', font=(MENUFONT, 14)).grid(row=indx-2, column=0, sticky=tk.E)
+                imgages[s[2]]=get_image(s[2], 500)
+                label = tk.Label(anweisungsframe, image=imgages[s[2]],
+                        bg=BG_COLOR, fg='white').grid(row=indx-2, column=1, sticky=tk.W)
+        indx +=1
 
     tk.Button(frame, text="BACK", font=(HEADINGFONT, 20), 
             bg="#28393a", fg='white', cursor="hand2", 
@@ -139,7 +176,7 @@ for frame in frames:
 
 load_main_frame()
 root.eval("tk::PlaceWindow . center")
-print("Screen WxH+w+h:",root.winfo_screenwidth(),"x",root.winfo_screenheight(),"+",root.winfo_reqwidth(),"+",root.winfo_reqheight())
+log("Screen WxH+w+h:",root.winfo_screenwidth(),"x",root.winfo_screenheight(),"+",root.winfo_reqwidth(),"+",root.winfo_reqheight())
 
 # Run app
 root.mainloop()

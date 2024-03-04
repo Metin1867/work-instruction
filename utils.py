@@ -1,3 +1,9 @@
+LOGGING=False
+
+def log(*args):
+    if LOGGING==True:
+        print(args)
+
 def flatten_list(array, dict_keyvalue="KeyValue"):
     flat_list = []
     if type(array) in (list, tuple, dict):
@@ -20,6 +26,15 @@ def flatten_list(array, dict_keyvalue="KeyValue"):
         flat_list.append(array)
 
     return flat_list
+
+def list_to_string(list, separator="\n"):
+    datavalue = ""
+    for info in list:
+        if info==None:
+            datavalue += separator
+        else:
+            datavalue += str(info) + separator
+    return datavalue
 
 if __name__ == '__main__':
     import unittest
@@ -49,5 +64,10 @@ if __name__ == '__main__':
                                                            'Eine erste Anweisung','2023-05-12 10:30:34',None,1,
                                                            'eine erste Schritt der ersten Anweisung',None,1,'DIE ANWEISUNG 1'],
                                                            "Should be [...]")
+        def test_list_to_string(self):
+            self.assertEqual(list_to_string([1,2,3]), "1\n2\n3\n", """Should be '1
+2
+3
+'""")
 
     unittest.main()
